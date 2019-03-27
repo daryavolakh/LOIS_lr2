@@ -299,10 +299,17 @@ function start() {
     console.log("RESULT");
     console.log(table);
 
+    var message;
     if(isTautology()){        
-        alert("Является общезначимой(тавтологией) формулой.")
+        message = "Tautology."
     } else {        
-        alert("Не является общезначимой(тавтологией) формулой.")
+        message ="Not tautology."
     }
+    var mainDiv = document.getElementById("gener_div");
+    mainDiv.innerHTML = "";
+    var answer = document.createElement("p");
+    var answerContent = document.createTextNode("Answer: " + message);
+    answer.appendChild(answerContent);
+    mainDiv.appendChild(answer);
 }
 //((P~Q)~((!W)&(!P)))

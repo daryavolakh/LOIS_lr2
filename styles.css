@@ -37,6 +37,12 @@ input:focus{
     background-color: #fceff4;
     border: 2px solid #f9d4e2;
     color:#51484c;
+    cursor: pointer;
+}
+
+.btn:focus{
+    box-shadow: none;
+    border-color: #f79ebf;
 }
 
 .btn:hover{
@@ -49,20 +55,6 @@ input:focus{
     text-align: center;
 }
 
-.div_with_ol{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin-top: 25px;
-}
-
-ol{
-    text-align: left;
-    list-style-position: inside;
-    width: 50%;
-    transform: translateX(70%);
-}
-
-li{
-    padding-left: 15px;
+.generating{
+    margin-top: 15px;
 }
