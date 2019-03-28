@@ -2,8 +2,8 @@
     //////////////////////////////////////////////////////////////////////////////////////
 // Лабораторная работа 2 по дисциплине ЛОИС
 // Выполнена студенткой группы 621702 БГУИР Волах Д.Ю.
-// **************.
-// 26.02.2019
+// Проверка того, является ли формула общезначимой (тавтологией).
+// 26.03.2019
 //
 // https://learn.javascript.ru/
 //
@@ -81,10 +81,10 @@ function changeConstant(constant) {
     }
 }
 
-function calculateNumberOfVars(variables){
+function calculateNumberOfVars(variables) {
     var number = 0;
     for (var indexI = 0; indexI < variables.length; indexI++) {
-        if (!findInArray(constants, variables[indexI])){
+        if (!findInArray(constants, variables[indexI])) {
             number++;
         }
     }
@@ -110,7 +110,7 @@ function createTable(table, variables) {
             var constant;
             if (variables[indexI] == '1') {
                 constant = 1;
-            } else if(variables[indexI] == '0'){
+            } else if (variables[indexI] == '0') {
                 constant = 0;
             }
 
@@ -159,8 +159,6 @@ function findCol(variable) {
     }
 }
 
-//1, 0~A, (0~A)&1, (((((A&B)&C)&D)&E)&F)...&K
-
 function findLeftPart(sub, indexOfOperation) {
     var leftPart = "";
     for (var index = 1; index < indexOfOperation; index++) {
@@ -191,6 +189,7 @@ function mainCalculations(table, subFormulas) {
         if (operation == "-" && subFormulas[index][1][indexOfOperation + 1] == ">") {
             operation += ">";
         }
+
         var row = new Array();
         if (operation == "!") {
             var variable = findRightPart(subFormulas[index][1], indexOfOperation);
@@ -208,9 +207,8 @@ function mainCalculations(table, subFormulas) {
             var rightPart = findRightPart(subFormulas[index][1], indexOfOperation);
             var colForLeftPart = findCol(leftPart);
             var colForRightPart = findCol(rightPart);
-
+            var newCol = new Array();
             if (operation == "&") {
-                var newCol = new Array();
                 for (var indexI = 0; indexI < colForLeftPart.length; indexI++) {
                     if (colForLeftPart[indexI] == 1 && colForRightPart[indexI] == 1) {
                         newCol.push(1);
@@ -219,12 +217,7 @@ function mainCalculations(table, subFormulas) {
                         newCol.push(0);
                     }
                 }
-                var newField = new Array();
-                newField.push(subFormulas[index][1]);
-                newField.push(newCol);
-                table.push(newField);
             } else if (operation == "|") {
-                var newCol = new Array();
                 for (var indexI = 0; indexI < colForLeftPart.length; indexI++) {
                     if (colForLeftPart[indexI] == 0 && colForRightPart[indexI] == 0) {
                         newCol.push(0);
@@ -233,12 +226,7 @@ function mainCalculations(table, subFormulas) {
                         newCol.push(1);
                     }
                 }
-                var newField = new Array();
-                newField.push(subFormulas[index][1]);
-                newField.push(newCol);
-                table.push(newField);
             } else if (operation == "~") {
-                var newCol = new Array();
                 for (var indexI = 0; indexI < colForLeftPart.length; indexI++) {
                     if ((colForLeftPart[indexI] == 0 && colForRightPart[indexI] == 0) || (colForLeftPart[indexI] == 1 && colForRightPart[indexI] == 1)) {
                         newCol.push(1);
@@ -247,12 +235,7 @@ function mainCalculations(table, subFormulas) {
                         newCol.push(0);
                     }
                 }
-                var newField = new Array();
-                newField.push(subFormulas[index][1]);
-                newField.push(newCol);
-                table.push(newField);
             } else if (operation == "->") {
-                var newCol = new Array();
                 for (var indexI = 0; indexI < colForLeftPart.length; indexI++) {
                     if ((colForLeftPart[indexI] == 0 && colForRightPart[indexI] == 0) || (colForLeftPart[indexI] == 0 && colForRightPart[indexI] == 1) || (colForLeftPart[indexI] == 1 && colForRightPart[indexI] == 1)) {
                         newCol.push(1);
@@ -261,22 +244,22 @@ function mainCalculations(table, subFormulas) {
                         newCol.push(0);
                     }
                 }
-                var newField = new Array();
-                newField.push(subFormulas[index][1]);
-                newField.push(newCol);
-                table.push(newField);
             }
+            var newField = new Array();
+            newField.push(subFormulas[index][1]);
+            newField.push(newCol);
+            table.push(newField);
         }
     }
 }
 
-function isTautology(){
+function isTautology() {
     var lastCol = table.length - 1;
-    for (var index = 0; index < table[lastCol][1].length; index++){
+    for (var index = 0; index < table[lastCol][1].length; index++) {
         if (table[lastCol][1][index] == 0) {
             return false;
         }
-    } 
+    }
     return true;
 }
 
@@ -288,22 +271,23 @@ function start() {
     formula = input.elements[0].value;
 
     if (formula == "") {
-        alert("Empty field! Please, enter formula!")
+        alert("Empty field! Please, enter a formula!")
         return;
     }
 
     findSubformulas(subFormulas, variables);
     createTable(table, variables);
     mainCalculations(table, subFormulas);
-
+/*
     console.log("RESULT");
     console.log(table);
+*/
 
     var message;
-    if(isTautology()){        
+    if (isTautology()) {
         message = "Tautology."
-    } else {        
-        message ="Not tautology."
+    } else {
+        message = "Not tautology."
     }
     var mainDiv = document.getElementById("gener_div");
     mainDiv.innerHTML = "";
